@@ -90,7 +90,7 @@ model User {
   role          Role      @default(USER)
 
   // Profile Details
-  username        String    @unique @default(dbgenerated()) // Handled via setup/oauth
+  username        String    @unique @default(uuid())
   displayName     String?
   password        String?   // Hash for email login
   bio             String?   @db.Text
