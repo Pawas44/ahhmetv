@@ -12,6 +12,9 @@ import { useRouter } from 'next/navigation';
 export default function SettingsPage() {
   const router = useRouter();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteStep, setDeleteStep] = useState<'initial' | 'otp'>('initial');
+  const [otp, setOtp] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
   const [settings, setSettings] = useState({
     darkMode: true,
     notifications: true,
@@ -22,22 +25,51 @@ export default function SettingsPage() {
     allowMessages: true,
   });
 
-  const handleDeleteAccount = async () => {
+  const handleRequestOTP = async () => {
+    setIsDeleting(true);
     try {
-      const res = await fetch('/api/users/me', {
-        method: 'DELETE',
-      });
+      const res = await fetch('/api/users/delete/request-otp', { method: 'POST' });
+      const data = await res.json();
       if (res.ok) {
-        toast.success('Account deleted successfully');
-        await signOut({ callbackUrl: '/' });
+        toast.success(data.message || 'OTP sent to your email');
+        setDeleteStep('otp');
       } else {
-        throw new Error();
+        throw new Error(data.error);
       }
-    } catch {
-      toast.error('Failed to delete account');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to request OTP');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
+  const handleConfirmDelete = async () => {
+    if (!otp || otp.length < 6) {
+      toast.error('Please enter a valid 6-digit OTP');
+      return;
+    }
+    
+    setIsDeleting(true);
+    try {
+      const res = await fetch('/api/users/delete/confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ otp })
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        toast.success(data.message || 'Account permanently deleted');
+        await signOut({ callbackUrl: '/' });
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (err: any) {
+      toast.error(err.message || 'Invalid OTP or failed to delete account');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
   const settingsGroups = [
     {
       title: 'Appearance',
@@ -130,12 +162,36 @@ export default function SettingsPage() {
               <Trash2 className="w-5 h-5" /> Danger Zone
             </h2>
             {showDeleteConfirm ? (
-              <div className="space-y-3">
-                <p className="text-sm text-muted">Are you sure? This action cannot be undone. All your data will be permanently deleted.</p>
-                <div className="flex gap-3">
-                  <button onClick={handleDeleteAccount} className="btn-danger flex-1">Yes, Delete My Account</button>
-                  <button onClick={() => setShowDeleteConfirm(false)} className="btn-secondary flex-1">Cancel</button>
-                </div>
+              <div className="space-y-4">
+                {deleteStep === 'initial' ? (
+                  <>
+                    <p className="text-sm text-muted">Are you sure? This action cannot be undone. All your data will be permanently deleted.</p>
+                    <div className="flex gap-3">
+                      <button onClick={handleRequestOTP} disabled={isDeleting} className="btn-danger flex-1">
+                        {isDeleting ? 'Sending OTP...' : 'Yes, Send OTP to Email'}
+                      </button>
+                      <button onClick={() => setShowDeleteConfirm(false)} disabled={isDeleting} className="btn-secondary flex-1">Cancel</button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm text-muted">Enter the 6-digit OTP sent to your email to confirm deletion.</p>
+                    <input 
+                      type="text" 
+                      value={otp} 
+                      onChange={(e) => setOtp(e.target.value)} 
+                      placeholder="Enter OTP" 
+                      className="glass-input w-full text-center text-xl tracking-widest mb-2"
+                      maxLength={6}
+                    />
+                    <div className="flex gap-3">
+                      <button onClick={handleConfirmDelete} disabled={isDeleting} className="btn-danger flex-1">
+                        {isDeleting ? 'Deleting...' : 'Confirm Delete'}
+                      </button>
+                      <button onClick={() => { setDeleteStep('initial'); setShowDeleteConfirm(false); setOtp(''); }} disabled={isDeleting} className="btn-secondary flex-1">Cancel</button>
+                    </div>
+                  </>
+                )}
               </div>
             ) : (
               <button onClick={() => setShowDeleteConfirm(true)} className="btn-danger w-full">

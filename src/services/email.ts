@@ -49,3 +49,16 @@ export async function sendPasswordResetEmail(email: string, token: string) {
   `;
   await sendEmail({ to: email, subject: 'Reset your AHHHMETV Password', html });
 }
+
+export async function sendDeleteAccountOTPEmail(email: string, otp: string) {
+  const html = `
+    <div style="font-family: sans-serif; background-color: #0a0a0f; color: #fff; padding: 40px; border-radius: 12px;">
+      <h2 style="color: #ef4444;">Account Deletion Request</h2>
+      <p>We received a request to permanently delete your AHHHMETV account.</p>
+      <p>Your One-Time Password (OTP) to confirm deletion is:</p>
+      <h1 style="color: #ef4444; letter-spacing: 4px; font-size: 32px;">${otp}</h1>
+      <p style="color: #9ca3af; font-size: 14px;">If you did not request this, please ignore this email and change your password.</p>
+    </div>
+  `;
+  await sendEmail({ to: email, subject: 'Account Deletion OTP - AHHHMETV', html });
+}

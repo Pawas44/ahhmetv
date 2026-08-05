@@ -233,85 +233,94 @@ export default function ChatPage() {
         )}
 
         {(status === 'connected' || status === 'disconnected') && (
-          <>
-            <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover" />
-
-            <div className="absolute bottom-24 right-4 w-40 h-28 sm:w-52 sm:h-36 rounded-2xl overflow-hidden glass border-2 border-white/10 shadow-xl">
+          <div className="flex flex-col sm:flex-row w-full h-full p-2 gap-2 relative">
+            {/* Local Video */}
+            <div className="relative flex-1 rounded-xl overflow-hidden bg-black border border-white/10 shadow-xl">
               <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-cover" style={{ transform: 'scaleX(-1)' }} />
               {!isCameraOn && (
                 <div className="absolute inset-0 bg-background-secondary flex items-center justify-center">
-                  <VideoOff className="w-6 h-6 text-muted" />
+                  <VideoOff className="w-12 h-12 text-muted" />
                 </div>
               )}
+              <div className="absolute top-4 left-4 glass rounded-lg px-3 py-1.5">
+                <p className="text-sm font-medium">You</p>
+              </div>
             </div>
 
-            <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                {partner && (
-                  <div className="glass rounded-xl px-4 py-2 flex items-center gap-3">
+            {/* Remote Video */}
+            <div className="relative flex-1 rounded-xl overflow-hidden bg-black border border-white/10 shadow-xl">
+              <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover" />
+              
+              <div className="absolute top-4 left-4 glass rounded-xl px-4 py-2 flex items-center gap-3">
+                {partner ? (
+                  <>
                     <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center text-sm font-bold">
                       {partner.displayName?.charAt(0) || partner.username?.charAt(0).toUpperCase()}
                     </div>
                     <div>
                       <p className="text-sm font-medium">{partner.displayName || partner.username}</p>
-                      {partner.country && <p className="text-xs text-muted">{partner.country}</p>}
+                      {partner.country && <p className="text-xs text-muted">{partner.country} {partner.gender && `• ${partner.gender}`}</p>}
                     </div>
-                  </div>
+                  </>
+                ) : (
+                  <p className="text-sm text-muted">Connecting...</p>
                 )}
               </div>
-
-              <div className="flex items-center gap-2">
-                <div className="glass rounded-lg px-3 py-1.5 flex items-center gap-2">
-                  <Clock className="w-3.5 h-3.5 text-muted" />
-                  <span className="text-sm font-mono">{formatDuration(callDuration)}</span>
-                </div>
-                <div className="glass rounded-lg px-3 py-1.5">
-                  <Wifi className="w-3.5 h-3.5 text-success" />
-                </div>
-              </div>
-            </div>
-
-            {status === 'disconnected' && (
-              <div className="absolute inset-0 bg-background/85 backdrop-blur-sm flex items-center justify-center z-10">
-                <div className="text-center">
-                  <WifiOff className="w-12 h-12 text-muted mx-auto mb-4" />
-                  <h3 className="text-xl font-bold mb-2">Partner Disconnected</h3>
-                  <div className="flex gap-3 justify-center mt-4">
-                    <button onClick={handleStartChat} className="btn-primary">Find New Match</button>
-                    <button onClick={handleSkip} className="btn-secondary">Leave</button>
+              
+              {/* Partner disconnected overlay */}
+              {status === 'disconnected' && (
+                <div className="absolute inset-0 bg-background/85 backdrop-blur-sm flex items-center justify-center z-10">
+                  <div className="text-center">
+                    <WifiOff className="w-12 h-12 text-muted mx-auto mb-4" />
+                    <h3 className="text-xl font-bold mb-2">Partner Disconnected</h3>
+                    <div className="flex gap-3 justify-center mt-4">
+                      <button onClick={handleStartChat} className="btn-primary text-sm px-4 py-2">Find New Match</button>
+                      <button onClick={handleSkip} className="btn-secondary text-sm px-4 py-2">Leave</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
 
-            {/* Video Action Controls */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
-              <button onClick={toggleCamera} className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${isCameraOn ? 'glass hover:bg-white/10' : 'bg-danger/80 hover:bg-danger'}`}>
-                {isCameraOn ? <Video className="w-5 h-5" /> : <VideoOff className="w-5 h-5" />}
+            {/* Absolute controls overlay for metadata (duration, etc) */}
+            <div className="absolute top-6 right-6 flex items-center gap-2 z-10 hidden sm:flex">
+              <div className="glass rounded-lg px-3 py-1.5 flex items-center gap-2">
+                <Clock className="w-3.5 h-3.5 text-muted" />
+                <span className="text-sm font-mono">{formatDuration(callDuration)}</span>
+              </div>
+              <div className="glass rounded-lg px-3 py-1.5">
+                <Wifi className="w-3.5 h-3.5 text-success" />
+              </div>
+            </div>
+
+            {/* Video Action Controls - Fixed at bottom center of the whole video area */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10 bg-background/50 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
+              <button onClick={toggleCamera} className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isCameraOn ? 'glass hover:bg-white/10' : 'bg-danger/80 hover:bg-danger'}`}>
+                {isCameraOn ? <Video className="w-4 h-4" /> : <VideoOff className="w-4 h-4" />}
               </button>
-              <button onClick={toggleMic} className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${isMicOn ? 'glass hover:bg-white/10' : 'bg-danger/80 hover:bg-danger'}`}>
-                {isMicOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}
+              <button onClick={toggleMic} className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMicOn ? 'glass hover:bg-white/10' : 'bg-danger/80 hover:bg-danger'}`}>
+                {isMicOn ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
               </button>
-              <button onClick={toggleScreenShare} className="w-12 h-12 rounded-full glass hover:bg-white/10 flex items-center justify-center">
-                <Monitor className="w-5 h-5" />
+              <button onClick={toggleScreenShare} className="w-10 h-10 rounded-full glass hover:bg-white/10 flex items-center justify-center">
+                <Monitor className="w-4 h-4" />
               </button>
-              <button onClick={handleSkip} className="w-12 h-12 rounded-full glass hover:bg-white/10 flex items-center justify-center text-accent">
-                <SkipForward className="w-5 h-5" />
+              <button onClick={handleSkip} className="w-10 h-10 rounded-full glass hover:bg-white/10 flex items-center justify-center text-accent">
+                <SkipForward className="w-4 h-4" />
               </button>
-              <button onClick={handleSkip} className="w-14 h-12 rounded-full bg-danger hover:bg-danger/80 flex items-center justify-center">
-                <PhoneOff className="w-5 h-5" />
+              <button onClick={handleSkip} className="w-12 h-10 rounded-full bg-danger hover:bg-danger/80 flex items-center justify-center">
+                <PhoneOff className="w-4 h-4" />
               </button>
-              <button onClick={handleAddFriend} className="w-12 h-12 rounded-full glass hover:bg-white/10 flex items-center justify-center text-success">
-                <UserPlus className="w-5 h-5" />
+              <button onClick={handleAddFriend} className="w-10 h-10 rounded-full glass hover:bg-white/10 flex items-center justify-center text-success">
+                <UserPlus className="w-4 h-4" />
               </button>
-              <button onClick={handleReport} className="w-12 h-12 rounded-full glass hover:bg-white/10 flex items-center justify-center text-warning">
-                <Flag className="w-5 h-5" />
+              <button onClick={handleReport} className="w-10 h-10 rounded-full glass hover:bg-white/10 flex items-center justify-center text-warning">
+                <Flag className="w-4 h-4" />
               </button>
-              <button onClick={() => setShowChat(!showChat)} className="w-12 h-12 rounded-full glass hover:bg-white/10 flex items-center justify-center lg:hidden">
-                <MessageCircle className="w-5 h-5" />
+              <button onClick={() => setShowChat(!showChat)} className="w-10 h-10 rounded-full glass hover:bg-white/10 flex items-center justify-center lg:hidden">
+                <MessageCircle className="w-4 h-4" />
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
 

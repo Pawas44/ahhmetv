@@ -76,7 +76,7 @@ export default function Footer() {
             &copy; {currentYear} AHHHMETV. All rights reserved.
           </p>
           <p className="text-xs text-muted-dark flex items-center gap-1">
-            Made with <Heart className="w-3 h-3 text-danger fill-danger" /> for global friendships
+            Made by Findex
           </p>
         </div>
       </div>
