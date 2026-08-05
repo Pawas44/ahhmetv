@@ -56,7 +56,6 @@ function LoginFormContent() {
 
   const oauthProviders = [
     { name: 'Google', icon: Chrome, color: 'hover:border-red-500/30', id: 'google' },
-    { name: 'Facebook', icon: Facebook, color: 'hover:border-blue-600/30', id: 'facebook' },
     { name: 'GitHub', icon: Github, color: 'hover:border-white/30', id: 'github' },
   ];
 
@@ -71,7 +70,7 @@ function LoginFormContent() {
       </div>
 
       {/* OAuth Buttons */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-2 gap-3 mb-6">
         {oauthProviders.map((provider) => (
           <button
             key={provider.id}
