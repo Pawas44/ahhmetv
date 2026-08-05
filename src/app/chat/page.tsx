@@ -206,16 +206,22 @@ export default function ChatPage() {
                       />
                     </div>
                     <div>
-                      <label className="text-xs text-muted mb-1 block">Gender Preference</label>
-                      <select
-                        value={filters.gender || 'Any'}
-                        onChange={(e) => setFilters({ ...filters, gender: e.target.value === 'Any' ? null : e.target.value })}
-                        className="glass-input w-full text-sm appearance-none bg-[#0a0a1a] text-white [&>option]:bg-[#12122a]"
-                      >
-                        <option value="Any">Any Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                      </select>
+                      <label className="text-xs text-muted mb-2 block">Gender Preference</label>
+                      <div className="flex bg-[#0a0a1a] border border-white/10 rounded-xl p-1 gap-1">
+                        {['Any', 'Male', 'Female'].map((g) => (
+                          <button
+                            key={g}
+                            onClick={() => setFilters({ ...filters, gender: g === 'Any' ? null : g })}
+                            className={`flex-1 text-xs py-2 rounded-lg transition-all ${
+                              (filters.gender === g || (g === 'Any' && !filters.gender))
+                                ? 'bg-primary text-white shadow-md'
+                                : 'text-muted hover:text-white hover:bg-white/5'
+                            }`}
+                          >
+                            {g}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
