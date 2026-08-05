@@ -209,7 +209,7 @@ export function useSocket() {
       addMessage({
         id: tempId,
         senderId: user?.id || '',
-        senderName: user?.name || 'You',
+        senderName: user?.displayName || user?.username || 'You',
         content,
         type,
         timestamp: Date.now(),
