@@ -60,11 +60,6 @@ export default function Navbar() {
 
           {/* Right Side */}
           <div className="flex items-center gap-3">
-            {/* Online Count */}
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-success/10 border border-success/20">
-              <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-              <span className="text-xs text-success font-medium">{onlineCount.toLocaleString()} online</span>
-            </div>
 
             {isAuthenticated && userObj ? (
               <div className="relative">
