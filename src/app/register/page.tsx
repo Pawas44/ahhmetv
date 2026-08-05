@@ -73,8 +73,8 @@ export default function RegisterPage() {
             <p className="text-sm text-muted">Join AHHHMETV and start connecting</p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-            {['google', 'facebook', 'discord', 'github'].map((provider) => (
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            {['google', 'facebook', 'github'].map((provider) => (
               <button
                 key={provider}
                 onClick={() => handleOAuth(provider)}
