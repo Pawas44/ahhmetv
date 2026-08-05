@@ -18,6 +18,9 @@ export function useWebRTC() {
   } = useChatStore();
 
   const initializeMedia = useCallback(async () => {
+    const currentStream = useChatStore.getState().localStream;
+    if (currentStream) return currentStream;
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -131,7 +134,10 @@ export function useWebRTC() {
   );
 
   const startCall = useCallback(async () => {
-    const stream = await initializeMedia();
+    let stream = useChatStore.getState().localStream;
+    if (!stream) {
+      stream = await initializeMedia();
+    }
     if (!stream) return;
 
     const pc = await createPeerConnection(stream);

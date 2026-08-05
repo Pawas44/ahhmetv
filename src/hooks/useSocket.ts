@@ -106,7 +106,10 @@ export function useSocket() {
       callChannelRef.current = channel;
 
       channel.bind('chat:message', (data: any) => {
-        addMessage(data);
+        // Only add if it's not from us (prevent duplicate from optimistic update)
+        if (data.senderId !== useAuthStore.getState().user?.id) {
+          addMessage(data);
+        }
       });
 
       channel.bind('chat:typing', (data: { isTyping: boolean; userId: string }) => {
@@ -196,18 +199,36 @@ export function useSocket() {
     async (content: string, type: string = 'text') => {
       const activePartner = useChatStore.getState().partner;
       const activeCallId = useChatStore.getState().callId;
+      const { user } = useAuthStore.getState();
+      const addMessage = useChatStore.getState().addMessage;
+      
       if (!activePartner) return;
 
-      await fetch('/api/chat/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          content,
-          type,
-          receiverId: activePartner.id,
-          callId: activeCallId,
-        }),
+      // Optimistic update
+      const tempId = Date.now().toString();
+      addMessage({
+        id: tempId,
+        senderId: user?.id || '',
+        senderName: user?.name || 'You',
+        content,
+        type,
+        timestamp: Date.now(),
       });
+
+      try {
+        await fetch('/api/chat/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content,
+            type,
+            receiverId: activePartner.id,
+            callId: activeCallId,
+          }),
+        });
+      } catch (err) {
+        console.error('Failed to send message:', err);
+      }
     },
     []
   );

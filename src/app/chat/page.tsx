@@ -33,7 +33,14 @@ export default function ChatPage() {
 
   const { data: session } = useSession();
   const { joinMatchQueue, leaveMatchQueue, skipMatch, sendMessage, sendTyping } = useSocket();
-  const { startCall, endCall, toggleScreenShare } = useWebRTC();
+  const { startCall, endCall, toggleScreenShare, initializeMedia } = useWebRTC();
+
+  // Request permissions and initialize media immediately
+  useEffect(() => {
+    if (!showOnboarding && !localStream) {
+      initializeMedia();
+    }
+  }, [showOnboarding, localStream, initializeMedia]);
 
   // Attach local streams
   useEffect(() => {
