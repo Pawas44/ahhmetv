@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { User, Globe, Heart, Camera, Shield, Crown, Save, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { countries } from '@/lib/countries';
+import CountrySelect from '@/components/ui/CountrySelect';
 
 
 
@@ -148,14 +149,10 @@ export default function ProfilePage() {
               <>
                 <div>
                   <label className="text-xs text-muted mb-1 block">Country</label>
-                  <select 
+                  <CountrySelect 
                     value={form.country} 
-                    onChange={(e) => setForm({ ...form, country: e.target.value })} 
-                    className="glass-input w-full appearance-none bg-[#0a0a1a] text-white [&>option]:bg-[#12122a] [&>option]:text-white"
-                  >
-                    <option value="">Select country</option>
-                    {countries.map(c => <option key={c.code} value={c.code}>{c.flag} {c.name}</option>)}
-                  </select>
+                    onChange={(val) => setForm({ ...form, country: val })} 
+                  />
                 </div>
                 <div>
                   <label className="text-xs text-muted mb-1 block">Languages (comma separated)</label>
@@ -169,7 +166,16 @@ export default function ProfilePage() {
                   <span className="flex items-center gap-2">
                     {form.country ? (() => {
                       const c = countries.find(x => x.code === form.country);
-                      return c ? <>{c.flag} {c.name}</> : form.country;
+                      return c ? (
+                        <>
+                          <img 
+                            src={`https://flagcdn.com/w20/${c.code.toLowerCase()}.png`} 
+                            alt={c.name}
+                            className="w-4 h-auto rounded-sm shadow-sm"
+                          />
+                          {c.name}
+                        </>
+                      ) : form.country;
                     })() : 'Not set'}
                   </span>
                 </div>

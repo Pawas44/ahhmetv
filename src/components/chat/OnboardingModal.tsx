@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { User, Globe, Save } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import CountrySelect from '@/components/ui/CountrySelect';
 import { countries } from '@/lib/countries';
 
 
@@ -131,18 +132,13 @@ export default function OnboardingModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
-            <label className="text-xs text-muted mb-1 block flex items-center gap-1">
+            <label className="text-xs text-muted mb-1 flex items-center gap-1">
               <Globe className="w-3 h-3" /> Country
             </label>
-            <select 
-              required
+            <CountrySelect 
               value={form.country} 
-              onChange={(e) => setForm({ ...form, country: e.target.value })} 
-              className="glass-input w-full appearance-none bg-[#0a0a1a] text-white [&>option]:bg-[#12122a] [&>option]:text-white"
-            >
-              <option value="">Select country</option>
-              {countries.map(c => <option key={c.code} value={c.code}>{c.flag} {c.name}</option>)}
-            </select>
+              onChange={(val) => setForm({ ...form, country: val })} 
+            />
           </div>
 
           <button 
