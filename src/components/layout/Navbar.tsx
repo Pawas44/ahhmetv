@@ -60,6 +60,17 @@ export default function Navbar() {
 
           {/* Right Side */}
           <div className="flex items-center gap-3">
+            
+            <a 
+              href="https://www.effectivecpmnetwork.com/bu840aau?key=61f9ed0316d96c291f520f342d244234" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-400/20 to-orange-500/20 border border-yellow-500/30 text-yellow-500 hover:from-yellow-400/30 hover:to-orange-500/30 transition-all duration-300 cursor-pointer"
+              title="Get VIP Premium"
+            >
+              <Crown className="w-4 h-4" />
+              <span className="text-xs font-bold hidden sm:inline">Get VIP</span>
+            </a>
 
             {isAuthenticated && userObj ? (
               <div className="relative">
