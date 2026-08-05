@@ -4,6 +4,7 @@ import './globals.css';
 import Providers from './providers';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Footer />
           </div>
         </Providers>
+        <Script src="https://pl30708377.effectivecpmnetwork.com/34/ea/0d/34ea0dd7e623cc4c186fa69f7dfa0a7f.js" strategy="lazyOnload" />
       </body>
     </html>
   );
