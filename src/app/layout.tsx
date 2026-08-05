@@ -42,6 +42,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </Providers>
         <Script src="https://pl30708377.effectivecpmnetwork.com/34/ea/0d/34ea0dd7e623cc4c186fa69f7dfa0a7f.js" strategy="lazyOnload" />
+        {/* Adsterra Social Bar */}
+        <Script src="https://pl30708472.effectivecpmnetwork.com/a0/87/24/a08724461fc3fd6f5210f6ee4e17d971.js" strategy="lazyOnload" />
       </body>
     </html>
   );
