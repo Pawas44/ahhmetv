@@ -7,25 +7,47 @@ export default function AntiAdblock() {
   const [adblockDetected, setAdblockDetected] = useState(false);
 
   useEffect(() => {
-    // Wait a moment for adblockers to do their job
-    const timer = setTimeout(() => {
-      const ad = document.createElement('div');
-      ad.innerHTML = '&nbsp;';
-      // Common class names that adblockers target
-      ad.className = 'adsbox ad-placement doubleclick ad-placeholder ad-badge';
-      ad.style.position = 'absolute';
-      ad.style.top = '-999px';
-      ad.style.left = '-999px';
-      document.body.appendChild(ad);
+    const checkAdblock = async () => {
+      let isBlocked = false;
 
-      // Check if the element was hidden by an extension
-      if (ad.offsetHeight === 0 || window.getComputedStyle(ad).display === 'none') {
+      // Method 1: Check if known ad networks are blocked at the network level
+      try {
+        await fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', {
+          method: 'HEAD',
+          mode: 'no-cors',
+          cache: 'no-store'
+        });
+      } catch (e) {
+        // If fetch throws an error, the request was blocked by an extension
+        isBlocked = true;
+      }
+
+      // Method 2: DOM element check (Fallback)
+      if (!isBlocked) {
+        const ad = document.createElement('div');
+        ad.innerHTML = '&nbsp;';
+        ad.className = 'adsbox ad-placement doubleclick ad-placeholder ad-badge';
+        ad.style.position = 'absolute';
+        ad.style.top = '-999px';
+        ad.style.left = '-999px';
+        document.body.appendChild(ad);
+
+        // Allow a small delay for extensions to parse the DOM
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        if (ad.offsetHeight === 0 || window.getComputedStyle(ad).display === 'none') {
+          isBlocked = true;
+        }
+        document.body.removeChild(ad);
+      }
+
+      if (isBlocked) {
         setAdblockDetected(true);
       }
-      
-      // Cleanup
-      document.body.removeChild(ad);
-    }, 2000);
+    };
+
+    // Run the check after a slight delay
+    const timer = setTimeout(checkAdblock, 1500);
 
     return () => clearTimeout(timer);
   }, []);
