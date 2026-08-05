@@ -10,17 +10,24 @@ export default function AntiAdblock() {
     const checkAdblock = async () => {
       let isBlocked = false;
 
-      // Method 1: Check if known ad networks are blocked at the network level
-      try {
-        await fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', {
-          method: 'HEAD',
-          mode: 'no-cors',
-          cache: 'no-store'
-        });
-      } catch (e) {
-        // If fetch throws an error, the request was blocked by an extension
+      // Method 1: Inject a bait script. Adblockers will intercept the request and trigger 'onerror'
+      const baitScript = document.createElement('script');
+      baitScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+      baitScript.async = true;
+      baitScript.onerror = () => {
         isBlocked = true;
-      }
+        if (!adblockDetected) setAdblockDetected(true);
+      };
+      
+      // We don't really care if it loads successfully, but if it does, it's not blocked.
+      baitScript.onload = () => {
+        // If it loaded, we can clean it up
+        if (document.head.contains(baitScript)) {
+          document.head.removeChild(baitScript);
+        }
+      };
+      
+      document.head.appendChild(baitScript);
 
       // Method 2: DOM element check (Fallback)
       if (!isBlocked) {
