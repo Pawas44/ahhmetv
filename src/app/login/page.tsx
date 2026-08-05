@@ -78,7 +78,7 @@ function LoginFormContent() {
             className={`glass-hover flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${provider.color}`}
           >
             <provider.icon className="w-4 h-4 shrink-0" />
-            <span className="hidden xs:inline">{provider.name}</span>
+            <span>{provider.name}</span>
           </button>
         ))}
       </div>
