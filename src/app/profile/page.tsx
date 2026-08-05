@@ -6,7 +6,30 @@ import { motion } from 'framer-motion';
 import { User, Globe, Heart, Camera, Shield, Crown, Save, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const countries = ['US', 'UK', 'DE', 'FR', 'JP', 'BR', 'IN', 'AU', 'CA', 'KR', 'MX', 'IT', 'ES', 'NL', 'SE', 'PL', 'TR', 'RU', 'PH', 'TH'];
+const countries = [
+  { code: 'US', name: 'United States', flag: '🇺🇸' },
+  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },
+  { code: 'IN', name: 'India', flag: '🇮🇳' },
+  { code: 'CA', name: 'Canada', flag: '🇨🇦' },
+  { code: 'AU', name: 'Australia', flag: '🇦🇺' },
+  { code: 'DE', name: 'Germany', flag: '🇩🇪' },
+  { code: 'FR', name: 'France', flag: '🇫🇷' },
+  { code: 'JP', name: 'Japan', flag: '🇯🇵' },
+  { code: 'BR', name: 'Brazil', flag: '🇧🇷' },
+  { code: 'KR', name: 'South Korea', flag: '🇰🇷' },
+  { code: 'IT', name: 'Italy', flag: '🇮🇹' },
+  { code: 'ES', name: 'Spain', flag: '🇪🇸' },
+  { code: 'MX', name: 'Mexico', flag: '🇲🇽' },
+  { code: 'NL', name: 'Netherlands', flag: '🇳🇱' },
+  { code: 'SE', name: 'Sweden', flag: '🇸🇪' },
+  { code: 'TR', name: 'Turkey', flag: '🇹🇷' },
+  { code: 'RU', name: 'Russia', flag: '🇷🇺' },
+  { code: 'PH', name: 'Philippines', flag: '🇵🇭' },
+  { code: 'TH', name: 'Thailand', flag: '🇹🇭' },
+  { code: 'PK', name: 'Pakistan', flag: '🇵🇰' },
+  { code: 'BD', name: 'Bangladesh', flag: '🇧🇩' },
+  { code: 'ID', name: 'Indonesia', flag: '🇮🇩' },
+];
 
 export default function ProfilePage() {
   const { data: session, update } = useSession();
@@ -147,9 +170,13 @@ export default function ProfilePage() {
               <>
                 <div>
                   <label className="text-xs text-muted mb-1 block">Country</label>
-                  <select value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} className="glass-input w-full">
+                  <select 
+                    value={form.country} 
+                    onChange={(e) => setForm({ ...form, country: e.target.value })} 
+                    className="glass-input w-full appearance-none bg-[#0a0a1a] text-white [&>option]:bg-[#12122a] [&>option]:text-white"
+                  >
                     <option value="">Select country</option>
-                    {countries.map(c => <option key={c} value={c}>{c}</option>)}
+                    {countries.map(c => <option key={c.code} value={c.code}>{c.flag} {c.name}</option>)}
                   </select>
                 </div>
                 <div>
@@ -159,7 +186,15 @@ export default function ProfilePage() {
               </>
             ) : (
               <div className="space-y-3 text-sm">
-                <div className="flex justify-between"><span className="text-muted">Country</span><span>{form.country || 'Not set'}</span></div>
+                <div className="flex justify-between">
+                  <span className="text-muted">Country</span>
+                  <span className="flex items-center gap-2">
+                    {form.country ? (() => {
+                      const c = countries.find(x => x.code === form.country);
+                      return c ? <>{c.flag} {c.name}</> : form.country;
+                    })() : 'Not set'}
+                  </span>
+                </div>
                 <div className="flex justify-between"><span className="text-muted">Languages</span><span>{form.languages || 'Not set'}</span></div>
               </div>
             )}

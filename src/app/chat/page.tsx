@@ -12,6 +12,7 @@ import { useChatStore } from '@/stores/chatStore';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import type { MatchFilters } from '@/types';
+import OnboardingModal from '@/components/chat/OnboardingModal';
 
 export default function ChatPage() {
   const [messageInput, setMessageInput] = useState('');
@@ -22,6 +23,7 @@ export default function ChatPage() {
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   const {
     status, partner, messages, partnerTyping, onlineCount,
@@ -39,6 +41,18 @@ export default function ChatPage() {
       localVideoRef.current.srcObject = localStream;
     }
   }, [localStream]);
+
+  // Check onboarding status
+  useEffect(() => {
+    if (session?.user) {
+      const userObj = session.user as any;
+      if (!userObj.age || !userObj.gender || !userObj.country) {
+        setShowOnboarding(true);
+      } else {
+        setShowOnboarding(false);
+      }
+    }
+  }, [session]);
 
   // Attach remote streams
   useEffect(() => {
@@ -137,6 +151,8 @@ export default function ChatPage() {
 
   return (
     <div className="h-[calc(100vh-4rem)] flex flex-col lg:flex-row bg-background">
+      {showOnboarding && <OnboardingModal onClose={() => setShowOnboarding(false)} />}
+      
       {/* Video Stream Area */}
       <div className="flex-1 relative flex items-center justify-center bg-background-secondary">
         {status === 'idle' && (

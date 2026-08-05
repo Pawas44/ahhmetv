@@ -61,6 +61,9 @@ providers.push(
         email: user.email,
         image: user.image || user.avatar,
         role: user.role,
+        age: user.age,
+        gender: user.gender,
+        country: user.country,
       };
     },
   })
@@ -78,6 +81,9 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = (user as any).role || 'USER';
+        token.age = (user as any).age;
+        token.gender = (user as any).gender;
+        token.country = (user as any).country;
       }
 
       if (trigger === 'update' && session) {
@@ -90,6 +96,9 @@ export const authOptions: NextAuthOptions = {
       if (token && session.user) {
         (session.user as any).id = token.id;
         (session.user as any).role = token.role;
+        (session.user as any).age = token.age;
+        (session.user as any).gender = token.gender;
+        (session.user as any).country = token.country;
       }
       return session;
     },
