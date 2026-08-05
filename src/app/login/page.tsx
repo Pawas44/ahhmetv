@@ -5,7 +5,7 @@ import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, Video, Chrome, MessageCircle, Github, UserCircle } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Video, Chrome, MessageCircle, Github, UserCircle, Facebook } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 function LoginFormContent() {
@@ -56,6 +56,7 @@ function LoginFormContent() {
 
   const oauthProviders = [
     { name: 'Google', icon: Chrome, color: 'hover:border-red-500/30', id: 'google' },
+    { name: 'Facebook', icon: Facebook, color: 'hover:border-blue-600/30', id: 'facebook' },
     { name: 'Discord', icon: MessageCircle, color: 'hover:border-indigo-500/30', id: 'discord' },
     { name: 'GitHub', icon: Github, color: 'hover:border-white/30', id: 'github' },
   ];
@@ -71,15 +72,15 @@ function LoginFormContent() {
       </div>
 
       {/* OAuth Buttons */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {oauthProviders.map((provider) => (
           <button
             key={provider.id}
             onClick={() => handleOAuth(provider.id)}
-            className={`glass-hover flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${provider.color}`}
+            className={`glass-hover flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${provider.color}`}
           >
-            <provider.icon className="w-4 h-4" />
-            <span className="hidden sm:inline">{provider.name}</span>
+            <provider.icon className="w-4 h-4 shrink-0" />
+            <span className="hidden xs:inline">{provider.name}</span>
           </button>
         ))}
       </div>

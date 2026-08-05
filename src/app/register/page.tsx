@@ -73,14 +73,14 @@ export default function RegisterPage() {
             <p className="text-sm text-muted">Join AHHHMETV and start connecting</p>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 mb-6">
-            {['google', 'discord', 'github'].map((provider) => (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            {['google', 'facebook', 'discord', 'github'].map((provider) => (
               <button
                 key={provider}
                 onClick={() => handleOAuth(provider)}
-                className="glass-hover flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 capitalize"
+                className="glass-hover flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-300 capitalize"
               >
-                <span className="hidden sm:inline">{provider}</span>
+                <span>{provider}</span>
               </button>
             ))}
           </div>
