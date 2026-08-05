@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import type { MatchFilters } from '@/types';
 import OnboardingModal from '@/components/chat/OnboardingModal';
+import CountrySelect from '@/components/ui/CountrySelect';
 
 export default function ChatPage() {
   const [messageInput, setMessageInput] = useState('');
@@ -198,23 +199,23 @@ export default function ChatPage() {
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-xs text-muted mb-1 block">Country</label>
-                      <input
-                        type="text"
+                      <CountrySelect
                         value={filters.country || ''}
-                        onChange={(e) => setFilters({ ...filters, country: e.target.value || null })}
-                        placeholder="Any country"
-                        className="glass-input w-full text-sm"
+                        onChange={(val) => setFilters({ ...filters, country: val || null })}
+                        className="text-sm"
                       />
                     </div>
                     <div>
-                      <label className="text-xs text-muted mb-1 block">Language</label>
-                      <input
-                        type="text"
-                        value={filters.language || ''}
-                        onChange={(e) => setFilters({ ...filters, language: e.target.value || null })}
-                        placeholder="Any language"
-                        className="glass-input w-full text-sm"
-                      />
+                      <label className="text-xs text-muted mb-1 block">Gender Preference</label>
+                      <select
+                        value={filters.gender || 'Any'}
+                        onChange={(e) => setFilters({ ...filters, gender: e.target.value === 'Any' ? null : e.target.value })}
+                        className="glass-input w-full text-sm appearance-none bg-[#0a0a1a] text-white [&>option]:bg-[#12122a]"
+                      >
+                        <option value="Any">Any Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </select>
                     </div>
                   </div>
                 </motion.div>
@@ -317,10 +318,10 @@ export default function ChatPage() {
               <button onClick={handleSkip} className="w-12 h-10 rounded-full bg-danger hover:bg-danger/80 flex items-center justify-center">
                 <PhoneOff className="w-4 h-4" />
               </button>
-              <button onClick={handleAddFriend} className="w-10 h-10 rounded-full glass hover:bg-white/10 flex items-center justify-center text-success">
+              <button onClick={handleAddFriend} title="Add Friend" className="w-10 h-10 rounded-full glass hover:bg-white/10 flex items-center justify-center text-success">
                 <UserPlus className="w-4 h-4" />
               </button>
-              <button onClick={handleReport} className="w-10 h-10 rounded-full glass hover:bg-white/10 flex items-center justify-center text-warning">
+              <button onClick={handleReport} title="Report User" className="w-10 h-10 rounded-full glass hover:bg-danger/20 flex items-center justify-center text-danger">
                 <Flag className="w-4 h-4" />
               </button>
               <button onClick={() => setShowChat(!showChat)} className="w-10 h-10 rounded-full glass hover:bg-white/10 flex items-center justify-center lg:hidden">

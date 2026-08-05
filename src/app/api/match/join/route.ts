@@ -15,16 +15,12 @@ export async function POST(req: Request) {
     const body = await req.json().catch(() => ({}));
     const { interests, country, gender, language } = body;
 
-    // Update current user heartbeat, status, and filter criteria
+    // Update current user heartbeat
     const currentUser = await prisma.user.update({
       where: { id: userId },
       data: {
         isOnline: true,
         lastSeen: new Date(),
-        interests: interests || [],
-        country: country || null,
-        gender: gender || null,
-        languages: language ? [language] : [],
       },
     });
 
@@ -72,12 +68,18 @@ export async function POST(req: Request) {
 
     // Attempt to find a match (online in last 5 seconds, not in an active call, not ourselves)
     const fiveSecondsAgo = new Date(Date.now() - 5000);
+    // Apply optional filters
+    const filterQuery: any = {};
+    if (country) filterQuery.country = country;
+    if (gender && gender !== 'Any') filterQuery.gender = gender;
+
     const potentialMatch = await prisma.user.findFirst({
       where: {
         id: { not: userId },
         isOnline: true,
         lastSeen: { gte: fiveSecondsAgo },
         isBanned: false,
+        ...filterQuery,
         // Ensure they aren't already in an active call
         NOT: {
           OR: [
