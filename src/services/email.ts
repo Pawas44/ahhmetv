@@ -23,6 +23,7 @@ export async function sendEmail({ to, subject, html }: { to: string; subject: st
     });
   } catch (error) {
     console.error('Email sending error:', error);
+    throw error;
   }
 }
 
