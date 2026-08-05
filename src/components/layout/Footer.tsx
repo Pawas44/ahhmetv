@@ -43,14 +43,6 @@ export default function Footer() {
             <p className="text-sm text-muted mb-4 max-w-xs">
               Connect with people from around the world through instant random video chat.
             </p>
-            <div className="flex gap-3">
-              <a href="#" className="w-9 h-9 rounded-lg glass-hover flex items-center justify-center text-muted hover:text-white transition-colors">
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-lg glass-hover flex items-center justify-center text-muted hover:text-white transition-colors">
-                <Github className="w-4 h-4" />
-              </a>
-            </div>
           </div>
 
           {/* Links */}
