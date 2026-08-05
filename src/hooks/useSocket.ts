@@ -211,7 +211,7 @@ export function useSocket() {
         senderId: user?.id || '',
         senderName: user?.displayName || user?.username || 'You',
         content,
-        type,
+        type: type as any,
         timestamp: Date.now(),
       });
 
