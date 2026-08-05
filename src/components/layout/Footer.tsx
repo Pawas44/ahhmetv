@@ -9,7 +9,6 @@ export default function Footer() {
       title: 'Product',
       links: [
         { label: 'Start Chatting', href: '/chat' },
-        { label: 'Premium', href: '/premium' },
         { label: 'Features', href: '/#features' },
       ],
     },

@@ -22,7 +22,6 @@ export default function Navbar() {
   const navLinks = [
     { href: '/chat', label: 'Start Chat', icon: Video },
     { href: '/friends', label: 'Friends', icon: Users },
-    { href: '/premium', label: 'Premium', icon: Crown },
   ];
 
   const isActive = (href: string) => pathname === href;
