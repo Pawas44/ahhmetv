@@ -27,6 +27,7 @@ export interface PartnerInfo {
   displayName: string | null;
   avatar: string | null;
   country: string | null;
+  gender?: string | null;
   isPremium: boolean;
   isVerified: boolean;
 }
