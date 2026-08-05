@@ -171,11 +171,6 @@ export default function ChatPage() {
             <h2 className="text-3xl font-bold mb-3">Ready to Chat?</h2>
             <p className="text-muted mb-8">Spontaneous, secure video chat. Tap start to meet new friends around the world.</p>
 
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-              <span className="text-sm text-success">{onlineCount.toLocaleString()} people online</span>
-            </div>
-
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button onClick={handleStartChat} className="btn-primary text-lg px-8 py-4 flex items-center justify-center gap-2">
                 <Video className="w-5 h-5" /> Start Chat
