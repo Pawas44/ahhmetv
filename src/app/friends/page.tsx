@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, UserPlus, UserMinus, Check, X, Clock } from 'lucide-react';
+import { Users, UserPlus, UserMinus, Check, X, Clock, MessageCircle } from 'lucide-react';
+import Link from 'next/link';
 import toast from 'react-hot-toast';
 import type { Friend, FriendRequest } from '@/types';
 
@@ -143,6 +144,13 @@ export default function FriendsPage() {
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
+                    <Link 
+                      href={`/messages/${friend.id}`} 
+                      className="p-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-colors"
+                      title="Send Message"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                    </Link>
                     <button onClick={() => handleRemoveFriend(friend.friendshipId)} className="p-2 rounded-lg hover:bg-danger/10 text-muted hover:text-danger transition-colors">
                       <UserMinus className="w-4 h-4" />
                     </button>
